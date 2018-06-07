@@ -44,6 +44,7 @@ Partial Class Form1
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
         Me.Url = New System.Windows.Forms.TextBox()
+        Me.Timer3 = New System.Windows.Forms.Timer(Me.components)
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -85,7 +86,7 @@ Partial Class Form1
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(85, 25)
         Me.Button2.TabIndex = 3
-        Me.Button2.Text = "Add"
+        Me.Button2.Text = "Login"
         Me.Button2.UseVisualStyleBackColor = True
         '
         'Label6
@@ -176,9 +177,10 @@ Partial Class Form1
         Me.WebBrowser1.MinimumSize = New System.Drawing.Size(20, 20)
         Me.WebBrowser1.Name = "WebBrowser1"
         Me.WebBrowser1.ScriptErrorsSuppressed = True
-        Me.WebBrowser1.Size = New System.Drawing.Size(171, 124)
+        Me.WebBrowser1.Size = New System.Drawing.Size(171, 20)
         Me.WebBrowser1.TabIndex = 4
-        Me.WebBrowser1.Url = New System.Uri(resources.GetString("WebBrowser1.Url"), System.UriKind.Absolute)
+        Me.WebBrowser1.Url = New System.Uri("", System.UriKind.Relative)
+        Me.WebBrowser1.Visible = False
         '
         'PictureBox1
         '
@@ -245,6 +247,11 @@ Partial Class Form1
         Me.Url.TabIndex = 5
         Me.Url.Visible = False
         '
+        'Timer3
+        '
+        Me.Timer3.Enabled = True
+        Me.Timer3.Interval = 1
+        '
         'Form1
         '
         Me.AcceptButton = Me.Button2
@@ -299,5 +306,6 @@ Partial Class Form1
     Friend WithEvents Timer2 As System.Windows.Forms.Timer
     Friend WithEvents WebBrowser1 As System.Windows.Forms.WebBrowser
     Friend WithEvents Url As System.Windows.Forms.TextBox
+    Friend WithEvents Timer3 As System.Windows.Forms.Timer
 
 End Class

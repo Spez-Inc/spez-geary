@@ -1,4 +1,7 @@
-﻿Public Class Form1
+﻿Imports System.Drawing.Text
+
+Public Class Form1
+    Dim font1 As PrivateFontCollection = New PrivateFontCollection
     Private Const WM_NCHITTEST As Integer = 132
     Private Const HTCLIENT As Integer = 1
     Private Const HTCAPTION As Integer = 2
@@ -75,9 +78,13 @@
     End Sub
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        font1.AddFontFile("data/Font.ttf")
+        Me.Font = New Font(font1.Families(0), 8)
         ComboBox1.SelectedIndex = 0
         TextBox1.Select()
+        WebBrowser1.Navigate("https://accounts.google.com/signin/v2/sl/pwd?service=mail&passive=true&rm=false&continue=https%3A%2F%2Fmail.google.com%2Fmail%2F%3Ftab%3Dim&scc=1&ltmpl=default&ltmplcache=2&emr=1&osid=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
         Timer1.Start()
+        Timer3.Start()
     End Sub
 
     Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
@@ -139,14 +146,27 @@
                         Button3.Enabled = True
                     End If
                 End If
-                Threading.Thread.Sleep(1000)
                 WebBrowser1.Document.GetElementById("Passwd").SetAttribute("value", TextBox3.Text)
                 Threading.Thread.Sleep(1000)
                 WebBrowser1.Document.GetElementById("signIn").InvokeMember("click")
                 Threading.Thread.Sleep(1000)
-                My.Computer.FileSystem.CreateDirectory(Application.LocalUserAppDataPath + "/accounts/" + TextBox1.Text.ToString)
-                My.Computer.FileSystem.WriteAllText(Application.LocalUserAppDataPath + "/accounts/" + TextBox1.Text.ToString + "/accountname.txt", TextBox1.Text, True)
-                My.Computer.FileSystem.WriteAllText(Application.LocalUserAppDataPath + "/accounts/" + TextBox1.Text.ToString + "/email.txt", TextBox2.Text, True)
+                If WebBrowser1.Document IsNot Nothing Then
+                    Dim element = WebBrowser1.Document.GetElementById("errormsg_0_Passwd")
+                    If element IsNot Nothing Then
+                        Label7.ForeColor = Color.FromArgb(254, 0, 0)
+                        Label7.Text = "Failed To Login: Password is Not Recognized."
+                        ComboBox1.Enabled = True
+                        TextBox1.Enabled = True
+                        TextBox2.Enabled = True
+                        TextBox3.Enabled = True
+                        Button1.Enabled = True
+                        Button2.Enabled = True
+                        Button3.Enabled = True
+                    End If
+                End If
+                'My.Computer.FileSystem.CreateDirectory(Application.LocalUserAppDataPath + "/accounts/" + TextBox1.Text.ToString)
+                'My.Computer.FileSystem.WriteAllText(Application.LocalUserAppDataPath + "/accounts/" + TextBox1.Text.ToString + "/accountname.txt", TextBox1.Text, False)
+                'My.Computer.FileSystem.WriteAllText(Application.LocalUserAppDataPath + "/accounts/" + TextBox1.Text.ToString + "/email.txt", TextBox2.Text, False)
                 Threading.Thread.Sleep(1000)
                 Application.Restart()
                 Login()
@@ -175,6 +195,13 @@
 
     Private Sub WebBrowser1_DocumentCompleted(ByVal sender As System.Object, ByVal e As System.Windows.Forms.WebBrowserDocumentCompletedEventArgs) Handles WebBrowser1.DocumentCompleted
         Url.Text = WebBrowser1.Url.ToString
+        If Url.Text = "https://mail.google.com/mail/u/0/" Then
+            WebBrowser1.Select()
+            SendKeys.Send("{TAB} {ENTER}")
+            Label7.Visible = True
+            Label7.ForeColor = Color.Goldenrod
+            Label7.Text = "Sucessfully logged in."
+        End If
         Dim a As String
         Dim b As String
         a = "https://mail.google.com/mail/u/0/h/"
@@ -191,5 +218,17 @@
 
     Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
         End
+    End Sub
+
+    Private Sub Timer3_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer3.Tick
+        Dim a As String
+        Dim b As String
+        Dim c As String = WebBrowser1.DocumentText
+        a = "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg?sz=96"
+        b = InStr(c, a)
+        If b Then
+            Login()
+        Else
+        End If
     End Sub
 End Class
